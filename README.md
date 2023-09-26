@@ -11,8 +11,10 @@ Some of the programs can work also with MyoArmband from ThalmicLabs, but only on
 Since the codes are very similar in structure and there was a lot of copy and paste between them, it should be difficult to add the MyoArmband functionality to the other files as well.
 
 To work, you'll need a custom setup like this one:
+<p align="middle">
 <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup1.jpg" width=50% height=50%>
 <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup2.jpg" width=50% height=50%>
+</p>
 ## Live visualization programs
  Radial Graph | Round Plot
  :---------:|:----------:
