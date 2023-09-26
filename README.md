@@ -17,6 +17,8 @@ To work, you'll need a custom setup like this one:
   <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup2.jpg" width=40% height=40%>
 </p>
 
+I'll upload the wrist ring stl and the board schematics another time.
+
 ## Live visualization programs
  Radial Graph | Round Plot
  :---------:|:----------:
