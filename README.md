@@ -18,9 +18,9 @@ Since the codes are very similar in structure and there was a lot of copy and pa
 ## Acquisition Program
 To be used with the code found in the **esp32_code** folder.
 The poses of the exercise can be changed by just changing the names in the list. The photos are loaded directly from the **Pose** folder, but they need to have the exact same name of the poses in the exercise list. The photos should all be square.
-
-<img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/pose_display.PNG" width=50% height=50%>
-
+<p align="center">
+  <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/pose_display.PNG" width=50% height=50%>
+</p>
 ## Relabeling programs
 In the folder **Relabeling** there are all the matlab files that I wrote for this project. The main file is **emg_relabel.m**. It needs a csv file with this structure:
 
