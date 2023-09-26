@@ -12,8 +12,8 @@ Since the codes are very similar in structure and there was a lot of copy and pa
 
 ## Visualization files
  Radial Graph | Round Plot
- :---------:----------:
-![Radial Graph](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/radial_graph.gif)!![Round Plot](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/round_graph.gif)
+ :---------:|:----------:
+![Radial Graph](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/radial_graph.gif) | ![Round Plot](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/round_graph.gif)
 
 ## Dependencies
  - pygame
