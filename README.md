@@ -11,8 +11,8 @@ Some of the programs can work also with MyoArmband from ThalmicLabs, but only on
 Since the codes are very similar in structure and there was a lot of copy and paste between them, it should be difficult to add the MyoArmband functionality to the other files as well.
 
 ## Visualization files
-### Radial Graph
-![Radial Graph](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/radial_graph.gif)
+ Radial Graph | Round Plot
+![Radial Graph](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/radial_graph.gif)!![Round Plot](https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/round_graph.gif)
 
 ## Dependencies
  - pygame
