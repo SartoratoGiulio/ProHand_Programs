@@ -82,11 +82,39 @@ def worker(q):
 
 # ---------- Serial Functions ------------
 
+class ReadLine:
+    def __init__(self, s):
+        self.buf = bytearray()
+        self.s = s
+
+    def readline(self):
+        i = self.buf.find(b"\n")
+        if i >= 0:
+            r = self.buf[:i+1]
+            self.buf = self.buf[i+1:]
+            return r
+        while True:
+            i = max(1, min(2048, self.s.in_waiting))
+            data = self.s.read(i)
+            i = data.find(b"\n")
+            if i >= 0:
+                r = self.buf + data[:i+1]
+                self.buf[0:] = data[i+1:]
+                return r
+            else:
+                self.buf.extend(data)
+
 # Choose the arduino serial sort
 def choseArduinoSerial():
+    baudList = [9600, 19200, 38400, 57600, 115200, 230400, 460800]
     ports = serial.tools.list_ports.comports()
+    if len(ports) == 0:
+        print("No available port found.")
+        exit()
     portList = []
+    port = '0'
     i = 0
+    print("\nSerial ports found: ")
     for onePort in ports:
         portList.append(str(onePort))
         print(str(i)+". "+str(onePort))
@@ -99,26 +127,70 @@ def choseArduinoSerial():
     porta = port.split(" ")
     port = porta[0]
     print(port + " selected")
-    return(port)
+    print("\nSelect baudrate: ")
+    for baudrate in baudList:
+        print(str(i)+". "+str(baudrate))
+        i+=1
+    print("(Deafaul baudrate: 460800)")
+    val = input()
+    if val == "":
+        baud = 460800
+    else:
+        baud = baudList[int(val)-1]
+    print(f"{baud} baudrate selected")
+    return port, baud
 
-# Read the chosen serial port
-def arduinoSerial(serialInst):
-    if serialInst.in_waiting>0:
-            packet = serialInst.readline()
-            try:
-                packet = packet.decode('utf')
-                packet = packet[0:-2] # to remove the /r/n
-            except:
-                packet = old_packet
-            old_packet = packet
-            vals = packet.split(',')
-            return vals[-1]
-            # if using arduino to read the emg signals
-            # just return the whole list vals
+def arduinoSerial(q, arduinoPort, baud,):
+
+    # initialization variables
+    old_packet = "0,0,0,0,0,0,0,0,0"
+    old_vals = 0
+    values = [0,0,0,0,0,0,0,0,0]
+    old_values = [0,0,0,0,0,0,0,0,0]
+    start = 0
+
+    # preparing serial
+    serialArduino = serial.Serial(arduinoPort, baud, timeout = None)
+    rl = ReadLine(serialArduino)
+    serialArduino.close()
+    serialArduino.open()
+    serialArduino.write(b"SON\n")    
+    try:
+        while True:
+            if serialArduino.in_waiting:
+                #start = time.perf_counter_ns()
+                packet = rl.readline()
+                try:
+                    packet_utf = packet.decode('utf-8', errors='ignore').strip()
+                    if len(packet_utf)==36:
+                        values[0] = int(packet_utf[0:4])
+                        values[1] = int(packet_utf[4:8])
+                        values[2] = int(packet_utf[8:12])
+                        values[3] = int(packet_utf[12:16])
+                        values[4] = int(packet_utf[16:20])
+                        values[5] = int(packet_utf[20:24])
+                        values[6] = int(packet_utf[24:28])
+                        values[7] = int(packet_utf[28:32])
+                        values[8] = int(packet_utf[32:])
+                        old_values = values
+                    #print(STATUS[4])
+                    #print(packet_utf)
+                except:
+                    values = old_values
+                # emg_reading format:
+                # [0:9] Emg
+                # [10] Repetition
+                # [11] Pose
+                # [12] Angle
+                q.put(values)
+
+    except KeyboardInterrupt:
+        serialArduino.write(b"SOFF\n")
+        serialArduino.close()
 
 # ------------ Plot Function -------------
 
-def round_plot(scr,w,h,font1,vals,angle):
+def round_plot(scr,w,h,font1,vals, max_val):
 
     # To Do: modify this function when using arduino to also read emg sensors
     # EMG and angle are a single list: [emg, angle]
@@ -127,30 +199,34 @@ def round_plot(scr,w,h,font1,vals,angle):
     l1 = 50
     l2 = 256
 
-    CHANNELS = len(vals)
+    CHANNELS = len(vals)-1
+
+    for i in range(CHANNELS):
+        vals[i] = vals[i]*l2/max_val
     alpha = 150
     alpha = alpha/180*m.pi
 
-    logo = pygame.image.load("Logo Myoarmband.png")
-    logo_size = 80
-    logo = pygame.transform.scale(logo, (logo_size, logo_size))
+    #logo = pygame.image.load("Logo Myoarmband.png")
+    #logo_size = 80
+    #logo = pygame.transform.scale(logo, (logo_size, logo_size))
 
-
+    angle = vals[-1]
+    
     try:    
         scr.fill((0,0,0))
         for i in range(0,CHANNELS):
             # graph bars
-            rectRotated(scr,(255,255,255), [h/2, h/2,r], [5, 256], -i*360/CHANNELS)
-            rectRotated(scr,(255,255,255), [h/2, h/2,r], [30, 3], -i*360/CHANNELS)
-            rectRotated(scr,(255,255,255), [h/2, h/2,r+128], [20, 3], -i*360/CHANNELS)
-            rectRotated(scr,(255,255,255), [h/2, h/2,r+256], [30, 3], -i*360/CHANNELS)
+            rectRotated(scr,(255,255,255), [h/2, h/2,r], [5, 256], i*360/CHANNELS-180)
+            rectRotated(scr,(255,255,255), [h/2, h/2,r], [30, 3], i*360/CHANNELS-180)
+            rectRotated(scr,(255,255,255), [h/2, h/2,r+128], [20, 3], i*360/CHANNELS-180)
+            rectRotated(scr,(255,255,255), [h/2, h/2,r+256], [30, 3], i*360/CHANNELS-180)
             # emg value bars
-            rectRotated(scr,main_color, [h/2, h/2, r], [l1, int(abs(vals[i]))], -i*360/CHANNELS)
+            rectRotated(scr,main_color, [h/2, h/2, r], [l1, int(abs(vals[i]))], i*360/CHANNELS-180)
             # electrode number
-            show_text(scr, str(i+1), font1, h/2-r*3/4*m.sin(-i*360/CHANNELS/180*m.pi), h/2-r*3/4*m.cos(-i*360/CHANNELS/180*m.pi), (255,255,255))
+            show_text(scr, str(i), font1, h/2-r*3/4*m.sin(i*360/CHANNELS/180*m.pi-m.pi), h/2-r*3/4*m.cos(i*360/CHANNELS/180*m.pi-m.pi), (255,255,255))
             # marking electrode with the light
-            if i==3:
-                scr.blit(logo, (h/2-int(logo_size/2)-480*m.sin(-i*360/CHANNELS/180*m.pi), h/2-int(logo_size/2)-480*m.cos(-i*360/CHANNELS/180*m.pi)))
+            #if i==3:
+            #    scr.blit(logo, (h/2-int(logo_size/2)-480*m.sin(-i*360/CHANNELS/180*m.pi), h/2-int(logo_size/2)-480*m.cos(-i*360/CHANNELS/180*m.pi)))
                 #pygame.draw.circle(scr, myo_color, (h/2-450*m.sin(i*360/CHANNELS/180*m.pi), h/2-450*m.cos(i*360/CHANNELS/180*m.pi)), 10)
         pygame.draw.rect(scr, main_color, (875, 50, 250, 150), 5,2)
         show_text(scr, "Wrist Angle", font1, 1000, 100, (255,255,255))
@@ -167,13 +243,10 @@ if __name__ == "__main__":
     # Switch to True for testing UI, False to actually use the code
     test = False
     if not test:
-        porta = choseArduinoSerial()
-        serialArduino = serial.Serial()
-        serialArduino.boudrate = 9600
-        serialArduino.port = porta
-        serialArduino.open()
-        p = multiprocessing.Process(target=worker, args=(q,))
+        port, baud = choseArduinoSerial()
+        p = multiprocessing.Process(target=arduinoSerial, args=(q,port, baud))
         p.start()
+
 
     # screen height and width
     h = 900
@@ -183,25 +256,26 @@ if __name__ == "__main__":
     scr = pygame.display.set_mode((w,h))
     font_size = int(50)
     font1 = pygame.font.SysFont(None,font_size)
-    
+    clock = pygame.time.Clock()
+    old_max = 0
     try:
-        old_angle = 0
         while not test:
             #Get the emg data and plot it
             pygame.event.pump()
-            if not test:
-                angle = arduinoSerial(serialArduino)
-            if angle is None:
-                angle = old_angle
+            clock.tick(60)
             while not(q.empty()):
                 emg = list(q.get()) 
-                round_plot(scr, w,h, font1, emg, angle)
-                old_angle = angle
+                new_max = max(emg[0:8])
+                if new_max>old_max:
+                    old_max = new_max
+                round_plot(scr, w,h, font1, emg, old_max)
         while test:
             pygame.event.pump()
-            round_plot(scr, w,h, font1, [100,200,300,500,800,1000,1200,1500], 0)
+            round_plot(scr, w,h, font1, [100,200,300,500,800,1000,1200,1500,-120], 1500)
 			
     except KeyboardInterrupt:
         print("Quitting")
         pygame.quit()
-        quit()
+        p.terminate()
+        p.join()
+        exit()

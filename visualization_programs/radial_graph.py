@@ -196,13 +196,11 @@ if __name__ == "__main__":
 
     old_max = 0
     try:
-        old_angle = 0
         while not test:
             #Get the emg data and plot it
             pygame.event.pump()
             clock.tick(60)
             while not(q.empty()):
-                
                 emg = list(q.get()) 
                 new_max = max(emg[0:8])
                 if new_max>old_max:
