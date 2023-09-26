@@ -12,8 +12,9 @@ Since the codes are very similar in structure and there was a lot of copy and pa
 
 To work, you'll need a custom setup like this one:
 <p align="middle">
-<img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup1.jpg" width=50% height=50%>
-<img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup2.jpg" width=50% height=50%>
+  <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup1.jpg" width=40% height=40%>
+  &nbsp; &nbsp;
+  <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup2.jpg" width=40% height=40%>
 </p>
 ## Live visualization programs
  Radial Graph | Round Plot
