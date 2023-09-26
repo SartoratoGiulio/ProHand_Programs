@@ -21,6 +21,7 @@ The poses of the exercise can be changed by just changing the names in the list.
 <p align="center">
   <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/pose_display.PNG" width=50% height=50%>
 </p>
+
 ## Relabeling programs
 In the folder **Relabeling** there are all the matlab files that I wrote for this project. The main file is **emg_relabel.m**. It needs a csv file with this structure:
 
