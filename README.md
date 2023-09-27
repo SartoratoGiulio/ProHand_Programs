@@ -10,7 +10,7 @@ In this repo you'll find:
 Some of the programs can work also with MyoArmband from ThalmicLabs, but only on Linux. With Windows they tend to get stuck.
 Since the codes are very similar in structure and there was a lot of copy and paste between them, it should be difficult to add the MyoArmband functionality to the other files as well.
 
-To work, you'll need a custom setup like this one:
+To fully use these programs, you'll need a custom setup like this one:
 <p align="middle">
   <img src="https://github.com/SartoratoGiulio/ProHand_Programs/blob/main/readme_img/setup1.jpg" width=40% height=40%>
   &nbsp; &nbsp;
