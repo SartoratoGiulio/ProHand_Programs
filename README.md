@@ -1,5 +1,5 @@
 # ProHand Programs
-Collection of programs used the acquistion of data for the ProHand project
+Collection of programs used for the data acquistion for the ProHand project
 
 In this repo you'll find:
   - The EPS32 code used to acquire the data
