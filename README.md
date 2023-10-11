@@ -41,6 +41,12 @@ After the relabeling process is adviced to check the data and fix some errors, s
 
 The other files are mainly leftovers from previous iteration and debugging.
 
+## Training Programs
+In this folder there are various programs used to train and test the models in various ways. This was done with Jupyter notebooks for two reasons: Google Colab Compatibility and so that in case a training failed it was possible to restart the program without starting everything again. Most of the programs are kinda useless since the test were meant for my thesis work. I'll add a basic training program that contains just the dataframe manipulation, the models training and the models evaluiation.
+
+## STL  Files
+This folder contains the STL files for the wrist ring and the support for the sensors, plus the encorder ring and sensor mount that would be used with the Pro-Hand 3.0 prosthesis. You'll need a lot of 2mmx1mm magnets to fill both the wrist ring and the prosthesis encoder. The magnetic sensors used are the US1881 for the arm support and the US5881 for the prosthesis encoder. Note that for the wrist ring the magnets need to be mounted in with alternating polarities, while for the prosthesis ring they need to be mounted with the south pole facing outward, since the US5881 sensors are unipolar.
+
 ## Dependencies
  - pygame
  - pygame_widgets
