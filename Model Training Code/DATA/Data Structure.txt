@@ -4,7 +4,7 @@ Sunject
     !
     -- csv
     |	|
-    |	-- Data in csv format
+    |	-- Raw data in csv format
     -- mat
     	|
-    	-- Data in mat format
+    	-- Raw data in mat format
